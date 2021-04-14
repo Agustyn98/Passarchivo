@@ -76,9 +76,9 @@ class DBCategory(context: Context?) : SQLiteOpenHelper(context, "passarchivo", n
     fun updateOne(category: Category) : Int{
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(COLUMN_ID, category.getId())
-        contentValues.put(COLUMN_NAME, category.getName()) // EmpModelClass Name
-        contentValues.put(COLUMN_IMAGE_ID, category.getImageId() ) // EmpModelClass Email
+        //contentValues.put(COLUMN_ID, category.getId())
+        contentValues.put(COLUMN_NAME, category.getName())
+        contentValues.put(COLUMN_IMAGE_ID, category.getImageId() )
 
         // Updating Row
         val success = db.update(tableName, contentValues,"id= " + category.getId() ,null)

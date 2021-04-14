@@ -7,7 +7,7 @@
     tools:context=".editCategory">
 
     <EditText
-        android:id="@+id/editTextTextCategoryName"
+        android:id="@+id/editTextCategoryName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -49,5 +49,5 @@
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextCategoryName" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextCategoryName" />
 </androidx.constraintlayout.widget.ConstraintLayout>

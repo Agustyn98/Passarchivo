@@ -12,6 +12,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat.startActivity
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -51,10 +53,16 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) : RecyclerView.A
 
         holder.textView.text = dataSet[position].getName()
         when (dataSet[position].getImageId()) {
-            1 -> holder.imageView.setImageResource(R.mipmap.ic_kyoko)
-            2 -> holder.imageView.setImageResource(R.drawable.ic_laptop1)
+            0 -> holder.imageView.setImageResource(R.drawable.ic_laptop1)
+            1 -> holder.imageView.setImageResource(R.drawable.ic_shopping_cart)
+            2 -> holder.imageView.setImageResource(R.drawable.ic_credit_card)
+            3 -> holder.imageView.setImageResource(R.drawable.ic_email)
+            4 -> holder.imageView.setImageResource(R.drawable.ic_money)
+            5 -> holder.imageView.setImageResource(R.drawable.ic_web)
+            6 -> holder.imageView.setImageResource(R.drawable.ic_baseline_android_24)
+            7 -> holder.imageView.setImageResource(R.mipmap.ic_kyoko)
             else -> {
-                holder.imageView.setImageResource(R.drawable.ic_shopping_cart)
+                holder.imageView.setImageResource(R.drawable.ic_baseline_android_24)
             }
         }
 
@@ -81,17 +89,16 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) : RecyclerView.A
                     })
                     //EDIT BUTTON
                 .setNeutralButton("EDIT" , DialogInterface.OnClickListener { dialog, id ->
-                    val intent : Intent = Intent(holder.textView.context, editCategory::class.java).apply {
+
+                    val ACTIVITY_EDIT_REQUEST_CODE = 2;
+                    val intent: Intent = Intent(context, editCategory::class.java).apply {
                         putExtra("id", dataSet[position].getId() )
                         putExtra("name", dataSet[position].getName() )
                         putExtra("imageId", dataSet[position].getImageId() )
                     }
-                    startActivity( holder.textView.context, intent , null);
-                    /*
-                    var db: DBCategory = DBCategory(holder.textView.context)
-                    val category : Category = Category(dataSet[position].getId() , "EDITADO" , 3)
-                    val result = db.updateOne(category)
-                     */
+                    var mainActivityInstance1 = context;
+                    mainActivityInstance1 = mainActivityInstance1 as (MainActivity)
+                    startActivityForResult(mainActivityInstance1, intent, ACTIVITY_EDIT_REQUEST_CODE, null)
 
                     dialog.cancel()
                 })
