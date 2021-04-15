@@ -1,25 +1,22 @@
 package com.example.passarchivo
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat.startActivity
 import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 
 
-class AdapterCategory(private val dataSet: ArrayList<Category>) : RecyclerView.Adapter<AdapterCategory.ViewHolder>() {
+class AdapterCategory(private val dataSet: ArrayList<Category>) :
+    RecyclerView.Adapter<AdapterCategory.ViewHolder>() {
 
     /*
         ViewHolder: Aca tengo las "views" donde van mis variables, donde se guarda cada item del RecycleList
@@ -66,10 +63,13 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) : RecyclerView.A
             }
         }
 
-
+        //ONCLICK listener
         holder.cardView.setOnClickListener(View.OnClickListener {
-            println("Click en textView ! \n" + dataSet[position].getId() + " <-- id?")
-            val intent = Intent(holder.textView.context, AccountListActivity::class.java)
+
+            val intent = Intent(holder.textView.context, AccountListActivity::class.java).apply {
+                putExtra("id", dataSet[position].getId())
+
+            }
             startActivity(holder.textView.context, intent, null)
         })
 
@@ -81,42 +81,48 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) : RecyclerView.A
                 .setTitle("Options")
                 .setMessage("message .....")
                 .setIcon(android.R.drawable.btn_default)
-                    //CANCEL BUTTON
+                //CANCEL BUTTON
                 .setPositiveButton("CANCEL",
                     DialogInterface.OnClickListener { dialog, id ->
                         dialog.cancel()
 
                     })
-                    //EDIT BUTTON
-                .setNeutralButton("EDIT" , DialogInterface.OnClickListener { dialog, id ->
+                //EDIT BUTTON
+                .setNeutralButton("EDIT", DialogInterface.OnClickListener { dialog, id ->
 
                     val ACTIVITY_EDIT_REQUEST_CODE = 2;
-                    val intent: Intent = Intent(context, editCategory::class.java).apply {
-                        putExtra("id", dataSet[position].getId() )
-                        putExtra("name", dataSet[position].getName() )
-                        putExtra("imageId", dataSet[position].getImageId() )
+                    val intent: Intent = Intent(context, EditCategory::class.java).apply {
+                        putExtra("id", dataSet[position].getId())
+                        putExtra("name", dataSet[position].getName())
+                        putExtra("imageId", dataSet[position].getImageId())
                     }
                     var mainActivityInstance1 = context;
                     mainActivityInstance1 = mainActivityInstance1 as (MainActivity)
-                    startActivityForResult(mainActivityInstance1, intent, ACTIVITY_EDIT_REQUEST_CODE, null)
+                    startActivityForResult(
+                        mainActivityInstance1,
+                        intent,
+                        ACTIVITY_EDIT_REQUEST_CODE,
+                        null
+                    )
 
                     dialog.cancel()
                 })
-                    //DELETE BUTTON
+                //DELETE BUTTON
                 .setNegativeButton("DELETE", DialogInterface.OnClickListener { dialog, id ->
                     var context = holder.textView.context;
-
+                    //Confirmation Alert dialog:
                     val builder2 = AlertDialog.Builder(context)
                     builder2.setTitle("Are you sure?")
                     builder2.setMessage("All password that belong to this category will be deleted")
                     builder2.setPositiveButton("Yes") { dialog, which ->
-                        //
-                        println("Delete \n")
                         var mainActivityInstance = context;
-                        mainActivityInstance = mainActivityInstance as (MainActivity) //Explicit Cast
-                        var db: DBCategory = DBCategory(context)
-                        val id = dataSet[position].getId();
-                        val result = db.deleteOne(id)
+                        mainActivityInstance =
+                            mainActivityInstance as (MainActivity) //Explicit Cast
+                        var db: DBHandler = DBHandler(context)
+                        val id_category = dataSet[position].getId();
+                        db.deleteAccountsByCategory(id_category)
+                        db.deleteOneCategory(id_category)
+
                         mainActivityInstance.setRecycleViewAdapter();
                         Toast.makeText(context, "Deleted.", Toast.LENGTH_SHORT).show()
                         dialog.cancel()
@@ -135,9 +141,5 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) : RecyclerView.A
     }
 
     override fun getItemCount() = dataSet.size // lo mismo que { return dataSet.size }
-
-    //TODO:
-    // Category CRUD: Select: done, Delete: done
-    //                Add: pending interface, Edit: pending interface
 
 }

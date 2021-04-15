@@ -9,8 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Passarchivo">
-        <activity android:name=".editCategory"></activity>
-        <activity android:name=".AccountListActivity"></activity>
+        <activity android:name=".ViewAccount"></activity>
+        <activity android:name=".EditAccount" />
+        <activity android:name=".EditCategory" />
+        <activity android:name=".AccountListActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
