@@ -1,4 +1,4 @@
-package com.example.passarchivo
+package com.example.passarchivo.category
 
 import android.app.Activity
 import android.content.Intent
@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import com.example.passarchivo.R
 
 class EditCategory : AppCompatActivity() {
 

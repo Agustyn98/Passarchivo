@@ -1,13 +1,14 @@
-package com.example.passarchivo
+package com.example.passarchivo.account
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.passarchivo.DBHandler
+import com.example.passarchivo.R
 
 class AccountListActivity : AppCompatActivity() {
 
@@ -31,20 +32,30 @@ class AccountListActivity : AppCompatActivity() {
     fun setRecycleViewAccounts() {
         var idCategory = intent.getIntExtra("id", -1)
 
-        var recycleViewAccounts: RecyclerView = findViewById(R.id.recyclerViewAccounts)
+        val recycleViewAccounts: RecyclerView = findViewById(R.id.recyclerViewAccounts)
 
-        var array = getAllAccounts()
+        var array = ArrayList<Account>()
+        if(idCategory > 0)
+            array = getAllAccountsById()
+        else
+            array = getAllAccounts()
 
         recycleViewAccounts.adapter = AdapterAccount(array)
         recycleViewAccounts.layoutManager = LinearLayoutManager(this)
     }
 
-    fun getAllAccounts(): ArrayList<Account> {
-        var idCategory = intent.getIntExtra("id", -1)
+    fun getAllAccountsById(): ArrayList<Account> {
+        val idCategory = intent.getIntExtra("id", -1)
 
         var array: ArrayList<Account> = ArrayList<Account>()
-        var db: DBHandler = DBHandler(this@AccountListActivity)
+        val db: DBHandler = DBHandler(this@AccountListActivity)
         return db.getAllAccountsById(idCategory)
+    }
+
+    fun getAllAccounts(): ArrayList<Account>{
+        var array: ArrayList<Account> = ArrayList<Account>()
+        val db: DBHandler = DBHandler(this@AccountListActivity)
+        return db.getAllAccounts()
     }
 
     var ACTIVITY_ADD_ACCOUNT_REQUEST_CODE = 3;
@@ -74,7 +85,14 @@ class AccountListActivity : AppCompatActivity() {
         val password = data?.getStringExtra("password")!!
         val note = data?.getStringExtra("note")!!
 
-        val account : Account = Account(name = name, email = email, username = username,password = password,note = note,idCategory = idCategory)
+        val account: Account = Account(
+            name = name,
+            email = email,
+            username = username,
+            password = password,
+            note = note,
+            idCategory = idCategory
+        )
         var db: DBHandler = DBHandler(this@AccountListActivity)
         var result = db.addOneAccount(account)
         setRecycleViewAccounts()

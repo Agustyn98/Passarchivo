@@ -1,4 +1,4 @@
-package com.example.passarchivo
+package com.example.passarchivo.category
 
 import android.app.AlertDialog
 import android.content.DialogInterface
@@ -13,6 +13,9 @@ import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat.startActivity
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.recyclerview.widget.RecyclerView
+import com.example.passarchivo.DBHandler
+import com.example.passarchivo.R
+import com.example.passarchivo.account.AccountListActivity
 
 
 class AdapterCategory(private val dataSet: ArrayList<Category>) :
@@ -37,7 +40,7 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) :
     }
 
     // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterCategory.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.category_layout, parent, false)
@@ -45,7 +48,7 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) :
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: AdapterCategory.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Get element from your dataset at this position and replace the contents of the view with that element
 
         holder.textView.text = dataSet[position].getName()
@@ -79,17 +82,15 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) :
             var context = holder.textView.context;
             AlertDialog.Builder(context)
                 .setTitle("Options")
-                .setMessage("message .....")
-                .setIcon(android.R.drawable.btn_default)
+                //.setMessage("Options")
+                .setIcon(android.R.drawable.ic_dialog_alert)
                 //CANCEL BUTTON
                 .setPositiveButton("CANCEL",
                     DialogInterface.OnClickListener { dialog, id ->
                         dialog.cancel()
-
                     })
                 //EDIT BUTTON
                 .setNeutralButton("EDIT", DialogInterface.OnClickListener { dialog, id ->
-
                     val ACTIVITY_EDIT_REQUEST_CODE = 2;
                     val intent: Intent = Intent(context, EditCategory::class.java).apply {
                         putExtra("id", dataSet[position].getId())
@@ -97,14 +98,13 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) :
                         putExtra("imageId", dataSet[position].getImageId())
                     }
                     var mainActivityInstance1 = context;
-                    mainActivityInstance1 = mainActivityInstance1 as (MainActivity)
+                    mainActivityInstance1 = mainActivityInstance1 as (CategoryList)
                     startActivityForResult(
                         mainActivityInstance1,
                         intent,
                         ACTIVITY_EDIT_REQUEST_CODE,
                         null
                     )
-
                     dialog.cancel()
                 })
                 //DELETE BUTTON
@@ -117,7 +117,7 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) :
                     builder2.setPositiveButton("Yes") { dialog, which ->
                         var mainActivityInstance = context;
                         mainActivityInstance =
-                            mainActivityInstance as (MainActivity) //Explicit Cast
+                            mainActivityInstance as (CategoryList) //Explicit Cast
                         var db: DBHandler = DBHandler(context)
                         val id_category = dataSet[position].getId();
                         db.deleteAccountsByCategory(id_category)
@@ -133,7 +133,6 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) :
                     }
                     builder2.show()
                 }).show()
-
 
             true
         })

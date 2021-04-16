@@ -1,4 +1,4 @@
-package com.example.passarchivo
+package com.example.passarchivo.account
 
 import android.app.Activity
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import com.example.passarchivo.R
 
 class EditAccount : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

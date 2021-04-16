@@ -5,6 +5,8 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.passarchivo.account.Account
+import com.example.passarchivo.category.Category
 import java.lang.String
 
 class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", null, 1) {
@@ -22,17 +24,25 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
     private val COLUMN_PASSWORD = "password"
     private val COLUMN_NOTE = "note"
     private val COLUMN_ID_CATEGORY = "idCategory"
+    private val COLUMN_CUSTOM_NAME = "customFieldName"
+    private val COLUMN_CUSTOM_VALUE = "customFieldVal"
+
+    private val tableNameMainPassword = "MainPassword"
+    private val COLUMN_MAIN_PASS = "password"
 
     override fun onCreate(db: SQLiteDatabase?) {
 
         val createTableStatementCategory =
             "CREATE TABLE '$tableNameCategory' ('$COLUMN_ID' INTEGER NOT NULL,'$COLUMN_NAME' TEXT NOT NULL,'$COLUMN_IMAGE_ID' INTEGER, PRIMARY KEY('$COLUMN_ID') );"
         val createTableStatementAccount =
-            "CREATE TABLE $tableNameAccount ($COLUMN_IDACCOUNT INTEGER NOT NULL,$COLUMN_NAMEACCOUNT TEXT,$COLUMN_EMAIL TEXT,$COLUMN_USERNAME TEXT, $COLUMN_PASSWORD TEXT, $COLUMN_NOTE TEXT, $COLUMN_ID_CATEGORY INTEGER, PRIMARY KEY ($COLUMN_ID ));"
+            "CREATE TABLE $tableNameAccount ($COLUMN_IDACCOUNT INTEGER NOT NULL,$COLUMN_NAMEACCOUNT TEXT,$COLUMN_EMAIL TEXT,$COLUMN_USERNAME TEXT, $COLUMN_PASSWORD TEXT, $COLUMN_NOTE TEXT,$COLUMN_CUSTOM_NAME TEXT, $COLUMN_CUSTOM_VALUE TEXT ,$COLUMN_ID_CATEGORY INTEGER, PRIMARY KEY ($COLUMN_ID ));"
+        val createTableStatementMainPassword =
+            "CREATE TABLE $tableNameMainPassword ($COLUMN_MAIN_PASS INTEGER NOT NULL)"
 
         if (db != null) {
             db.execSQL(createTableStatementAccount)
             db.execSQL(createTableStatementCategory)
+            db.execSQL(createTableStatementMainPassword)
         }
     }
 
@@ -63,6 +73,15 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
         contentValues.put(COLUMN_ID_CATEGORY, account.getIdCategory())
 
         val result = db.insert(tableNameAccount, null, contentValues)
+        db.close()
+        return result
+    }
+
+    fun addMainPass(password : kotlin.String): Long{
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_MAIN_PASS, password)
+        val result = db.insert(tableNameMainPassword,null,contentValues)
         db.close()
         return result
     }
@@ -148,12 +167,12 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
         return accountArray;
     }
 
-    fun getOneAccount(id: Int) : Account?{
+    fun getOneAccount(id: Int): Account? {
         val db = this.readableDatabase
         val queryString = "SELECT * FROM " + tableNameAccount + " WHERE id = " + id;
-        var account: Account?
+        val account: Account?
 
-        var cursor: Cursor = db.rawQuery(queryString, null)
+        val cursor: Cursor = db.rawQuery(queryString, null)
 
         if (cursor.moveToFirst()) {
 
@@ -169,6 +188,17 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
 
         }
         return null
+
+    }
+
+    fun getMainPass() : kotlin.String{
+        val db = this.readableDatabase
+        val queryString = "SELECT * FROM " + tableNameMainPassword
+        val cursor: Cursor = db.rawQuery(queryString, null)
+        if(cursor.moveToFirst()){
+            return cursor.getString(0)
+        }
+        return ""
 
     }
 
@@ -233,6 +263,17 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
         val success = db.update(tableNameAccount, contentValues, "id= " + account.getId(), null)
         db.close()
         return success
+    }
+
+    fun updateMainPass(newPass : kotlin.String) : Int{
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_MAIN_PASS, newPass)
+
+        val success = db.update(tableNameMainPassword, contentValues, null,null)
+        db.close()
+        return success
+
     }
 
 }

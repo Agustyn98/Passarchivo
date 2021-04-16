@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditAccount">
+    tools:context=".account.EditAccount">
 
     <EditText
         android:id="@+id/editTextTextAccountName"
@@ -49,7 +49,7 @@
         android:layout_marginTop="12dp"
         android:ems="10"
         android:hint="Password"
-        android:inputType="textPassword"
+        android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextAccountUsername" />
 

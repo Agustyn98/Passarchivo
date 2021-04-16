@@ -1,4 +1,4 @@
-package com.example.passarchivo
+package com.example.passarchivo.category
 
 class Category(id: Int = -1 , name: String, imageId: Int) {
 

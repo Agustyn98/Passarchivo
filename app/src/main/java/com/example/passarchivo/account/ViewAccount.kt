@@ -1,4 +1,4 @@
-package com.example.passarchivo
+package com.example.passarchivo.account
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import com.example.passarchivo.DBHandler
+import com.example.passarchivo.R
 
 class ViewAccount : AppCompatActivity() {
     var id = -1
