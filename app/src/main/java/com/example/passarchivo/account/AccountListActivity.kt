@@ -1,5 +1,6 @@
 package com.example.passarchivo.account
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -30,12 +31,12 @@ class AccountListActivity : AppCompatActivity() {
     }
 
     fun setRecycleViewAccounts() {
-        var idCategory = intent.getIntExtra("id", -1)
+        val idCategory = intent.getIntExtra("id", -1)
 
-        val recycleViewAccounts: RecyclerView = findViewById(R.id.recyclerViewAccounts)
+        val recycleViewAccounts: RecyclerView = findViewById(R.id.recyclerViewSearchedAccounts)
 
         var array = ArrayList<Account>()
-        if(idCategory > 0)
+        if (idCategory > 0)
             array = getAllAccountsById()
         else
             array = getAllAccounts()
@@ -52,7 +53,7 @@ class AccountListActivity : AppCompatActivity() {
         return db.getAllAccountsById(idCategory)
     }
 
-    fun getAllAccounts(): ArrayList<Account>{
+    fun getAllAccounts(): ArrayList<Account> {
         var array: ArrayList<Account> = ArrayList<Account>()
         val db: DBHandler = DBHandler(this@AccountListActivity)
         return db.getAllAccounts()
@@ -61,42 +62,52 @@ class AccountListActivity : AppCompatActivity() {
     var ACTIVITY_ADD_ACCOUNT_REQUEST_CODE = 3;
 
     fun setButtonAddListener() {
-        var buttonAdd: Button = findViewById(R.id.buttonAddAccount)
-        var idCategory = intent.getIntExtra("id", -1)
+        val buttonAdd: Button = findViewById(R.id.buttonAddAccountSearch)
 
         buttonAdd.setOnClickListener(View.OnClickListener {
 
-            val intent: Intent = Intent(this, EditAccount::class.java)
+            val idCategory = intent.getIntExtra("id", -1)
+            val intent: Intent = Intent(this, EditAccount::class.java).apply {
+                putExtra("idCategory", idCategory)
+            }
             startActivityForResult(intent, ACTIVITY_ADD_ACCOUNT_REQUEST_CODE)
-
 
         })
     }
 
-    // This method is called when the second activity is finished
+    // This method is called after coming back from adding an account
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        var idCategory = intent.getIntExtra("id", -1)
+        if (requestCode == ACTIVITY_ADD_ACCOUNT_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
 
-        val name = data?.getStringExtra("name")!!
-        val email = data?.getStringExtra("email")!!
-        val username = data?.getStringExtra("username")!!
-        val password = data?.getStringExtra("password")!!
-        val note = data?.getStringExtra("note")!!
+                val idCategory = intent.getIntExtra("id", -1)
 
-        val account: Account = Account(
-            name = name,
-            email = email,
-            username = username,
-            password = password,
-            note = note,
-            idCategory = idCategory
-        )
-        var db: DBHandler = DBHandler(this@AccountListActivity)
-        var result = db.addOneAccount(account)
-        setRecycleViewAccounts()
+                val name = data?.getStringExtra("name")!!
+                val email = data?.getStringExtra("email")!!
+                val username = data?.getStringExtra("username")!!
+                val password = data?.getStringExtra("password")!!
+                val note = data?.getStringExtra("note")!!
+                val customFieldName = data?.getStringExtra("customFieldName")!!
+                val customFieldValue = data?.getStringExtra("customFieldValue")!!
 
+                val account: Account = Account(
+                    name = name,
+                    email = email,
+                    username = username,
+                    password = password,
+                    note = note,
+                    idCategory = idCategory,
+                    customFieldName = customFieldName,
+                    customFieldValue = customFieldValue
+                )
+                var db: DBHandler = DBHandler(this@AccountListActivity)
+                var result = db.addOneAccount(account)
+                setRecycleViewAccounts()
+
+            }
+        }
 
     }
 

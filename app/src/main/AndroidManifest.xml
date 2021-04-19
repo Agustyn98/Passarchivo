@@ -9,8 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Passarchivo">
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".CreateMainPassword" />
+        <activity android:name=".search.SeachAccount"></activity>
+        <activity android:name=".ChangePassword" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".password.CreateMainPassword" />
         <activity android:name=".MainPassword">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +24,7 @@
         <activity android:name=".account.EditAccount" />
         <activity android:name=".category.EditCategory" />
         <activity android:name=".account.AccountListActivity" />
-        <activity android:name=".category.CategoryList"></activity>
+        <activity android:name=".category.CategoryList" />
     </application>
 
 </manifest>

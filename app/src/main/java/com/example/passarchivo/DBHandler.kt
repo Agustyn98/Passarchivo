@@ -71,17 +71,19 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
         contentValues.put(COLUMN_PASSWORD, account.getPassword())
         contentValues.put(COLUMN_NOTE, account.getNote())
         contentValues.put(COLUMN_ID_CATEGORY, account.getIdCategory())
+        contentValues.put(COLUMN_CUSTOM_NAME, account.getCustomFieldName())
+        contentValues.put(COLUMN_CUSTOM_VALUE, account.getCustomFieldValue())
 
         val result = db.insert(tableNameAccount, null, contentValues)
         db.close()
         return result
     }
 
-    fun addMainPass(password : kotlin.String): Long{
+    fun addMainPass(password: kotlin.String): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COLUMN_MAIN_PASS, password)
-        val result = db.insert(tableNameMainPassword,null,contentValues)
+        val result = db.insert(tableNameMainPassword, null, contentValues)
         db.close()
         return result
     }
@@ -117,7 +119,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
             "SELECT * FROM " + tableNameAccount + " WHERE $COLUMN_ID_CATEGORY = $idCategory ";
 
         //Cursor = like a complex array of items that stores the query results
-        var cursor: Cursor = db.rawQuery(queryString, null)
+        val cursor: Cursor = db.rawQuery(queryString, null)
         //db.query()
         if (cursor.moveToFirst()) {
             do {
@@ -128,14 +130,25 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
                 val password = cursor.getString(4)
                 val note = cursor.getString(5)
                 val idCategory = cursor.getInt(6)
+                val customFieldName = cursor.getString(7)
+                val customFieldValue = cursor.getString(8)
                 val account: Account =
-                    Account(id, name, email, username, password, note, idCategory)
+                    Account(
+                        id,
+                        name,
+                        email,
+                        username,
+                        password,
+                        note,
+                        idCategory,
+                        customFieldName,
+                        customFieldValue
+                    )
 
                 accountArray.add(account)
 
             } while (cursor.moveToNext())
         }
-
         return accountArray;
     }
 
@@ -156,8 +169,20 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
                 val password = cursor.getString(4)
                 val note = cursor.getString(5)
                 val idCategory = cursor.getInt(6)
+                val customFieldName = cursor.getString(7)
+                val customFieldValue = cursor.getString(8)
                 val account: Account =
-                    Account(id, name, email, username, password, note, idCategory)
+                    Account(
+                        id,
+                        name,
+                        email,
+                        username,
+                        password,
+                        note,
+                        idCategory,
+                        customFieldName,
+                        customFieldValue
+                    )
 
                 accountArray.add(account)
 
@@ -182,8 +207,21 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
             val username = cursor.getString(3)
             val password = cursor.getString(4)
             val note = cursor.getString(5)
-            val idCategory = cursor.getInt(6)
-            account = Account(id, name, email, username, password, note, idCategory)
+            val customFieldName = cursor.getString(6)
+            val customFieldValue = cursor.getString(7)
+            val idCategory = cursor.getInt(8)
+            account = Account(
+                id,
+                name,
+                email,
+                username,
+                password,
+                note,
+                idCategory,
+                customFieldName,
+                customFieldValue
+            )
+
             return account;
 
         }
@@ -191,11 +229,11 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
 
     }
 
-    fun getMainPass() : kotlin.String{
+    fun getMainPass(): kotlin.String {
         val db = this.readableDatabase
         val queryString = "SELECT * FROM " + tableNameMainPassword
         val cursor: Cursor = db.rawQuery(queryString, null)
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             return cursor.getString(0)
         }
         return ""
@@ -258,6 +296,9 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
         contentValues.put(COLUMN_USERNAME, account.getUserName())
         contentValues.put(COLUMN_PASSWORD, account.getPassword())
         contentValues.put(COLUMN_NOTE, account.getNote())
+        contentValues.put(COLUMN_CUSTOM_NAME, account.getCustomFieldName())
+        contentValues.put(COLUMN_CUSTOM_VALUE, account.getCustomFieldValue())
+        contentValues.put(COLUMN_ID_CATEGORY, account.getIdCategory())
 
         // Updating Row
         val success = db.update(tableNameAccount, contentValues, "id= " + account.getId(), null)
@@ -265,15 +306,54 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
         return success
     }
 
-    fun updateMainPass(newPass : kotlin.String) : Int{
+    fun updateMainPass(newPass: kotlin.String): Int {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COLUMN_MAIN_PASS, newPass)
 
-        val success = db.update(tableNameMainPassword, contentValues, null,null)
+        val success = db.update(tableNameMainPassword, contentValues, null, null)
         db.close()
         return success
 
     }
 
+    fun searchAccounts(search : kotlin.String): ArrayList<Account> {
+        var accountArray = ArrayList<Account>()
+        val db = this.readableDatabase
+        val queryString = "SELECT * FROM $tableNameAccount WHERE $COLUMN_NAMEACCOUNT LIKE '%$search%' OR $COLUMN_EMAIL LIKE '%$search%' OR $COLUMN_USERNAME LIKE '%$search%' OR $COLUMN_NOTE LIKE '%$search%' OR $COLUMN_CUSTOM_NAME LIKE '%$search%';"
+
+        //Cursor = like a complex array of items that stores the query results
+        val cursor: Cursor = db.rawQuery(queryString, null)
+        //db.query()
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(0)
+                val name = cursor.getString(1)
+                val email = cursor.getString(2)
+                val username = cursor.getString(3)
+                val password = cursor.getString(4)
+                val note = cursor.getString(5)
+                val idCategory = cursor.getInt(6)
+                val customFieldName = cursor.getString(7)
+                val customFieldValue = cursor.getString(8)
+                val account: Account =
+                    Account(
+                        id,
+                        name,
+                        email,
+                        username,
+                        password,
+                        note,
+                        idCategory,
+                        customFieldName,
+                        customFieldValue
+                    )
+
+                accountArray.add(account)
+
+            } while (cursor.moveToNext())
+        }
+
+        return accountArray;
+    }
 }

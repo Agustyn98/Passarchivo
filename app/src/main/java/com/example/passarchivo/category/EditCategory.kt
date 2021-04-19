@@ -32,12 +32,12 @@ class EditCategory : AppCompatActivity() {
 
     fun setSpinnerImageId() {
 
-        var spinner: Spinner = findViewById(R.id.spinnerImageId)
-        var listImgeIds: ArrayList<String> = ArrayList<String>()
+        val spinner: Spinner = findViewById(R.id.spinnerImageId)
+        val listImgeIds: ArrayList<String> = ArrayList<String>()
         listImgeIds.add("Laptop"); listImgeIds.add("Shopping Cart"); listImgeIds.add("Credit Card"); listImgeIds.add("Email");
         listImgeIds.add("Money");listImgeIds.add("Web");listImgeIds.add("Android");listImgeIds.add("Kyoko");
 
-        var dataAdapter: ArrayAdapter<String> =
+        val dataAdapter: ArrayAdapter<String> =
             ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listImgeIds)
 
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

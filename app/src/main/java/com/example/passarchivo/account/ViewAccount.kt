@@ -7,7 +7,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.Spinner
 import android.widget.TextView
 import com.example.passarchivo.DBHandler
 import com.example.passarchivo.R
@@ -19,6 +21,8 @@ class ViewAccount : AppCompatActivity() {
     var username: String? = ""
     var password: String? = ""
     var note: String? = ""
+    var customFieldName: String? = ""
+    var customFieldValue: String? = ""
     var idCategory: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,30 +38,39 @@ class ViewAccount : AppCompatActivity() {
 
     }
 
+
     fun updateVariables() {
 
-        var db: DBHandler = DBHandler(this)
-        var account = db.getOneAccount(id)
+        val db: DBHandler = DBHandler(this)
+        val account = db.getOneAccount(id)
         name = account?.getName()
         email = account?.getEmail()
         username = account?.getUserName()
         password = account?.getPassword()
         note = account?.getNote()
+        customFieldName = account?.getCustomFieldName()
+        customFieldValue = account?.getCustomFieldValue()
+
         if (account != null) {
             idCategory = account.getIdCategory()
         }
 
-        var textViewName = findViewById<TextView>(R.id.textView_ViewAccountName)
-        var textViewEmail = findViewById<TextView>(R.id.textView_ViewAccountEmail)
-        var textViewUsername = findViewById<TextView>(R.id.textView_ViewAccountUsername)
-        var textViewPassword = findViewById<TextView>(R.id.textView_ViewAccountPassword)
-        var textViewNote = findViewById<TextView>(R.id.textView_ViewAccountNote)
+        val textViewName = findViewById<TextView>(R.id.textView_ViewAccountName)
+        val textViewEmail = findViewById<TextView>(R.id.textView_ViewAccountEmail)
+        val textViewUsername = findViewById<TextView>(R.id.textView_ViewAccountUsername)
+        val textViewPassword = findViewById<TextView>(R.id.textView_ViewAccountPassword)
+        val textViewNote = findViewById<TextView>(R.id.textView_ViewAccountNote)
+        val textViewCustomName = findViewById<TextView>(R.id.textView_ViewAccountCustomName)
+        val textViewCustomValue = findViewById<TextView>(R.id.textView_ViewAccountCustomValue)
 
         textViewName.setText(name)
         textViewEmail.setText(email)
         textViewUsername.setText(username)
         textViewPassword.setText(password)
         textViewNote.setText(note)
+        textViewCustomName.setText(customFieldName)
+        textViewCustomValue.setText(customFieldValue)
+
     }
 
     fun setButtonDeleteListener() {
@@ -89,16 +102,6 @@ class ViewAccount : AppCompatActivity() {
             // show alert dialog
             alert.show()
 
-
-            /*
-            var db: DBHandler = DBHandler(this)
-            db.deleteOneAccount(id)
-
-            finish()
-
-             */
-
-
         })
     }
 
@@ -116,6 +119,9 @@ class ViewAccount : AppCompatActivity() {
                 putExtra("username", username)
                 putExtra("password", password)
                 putExtra("note", note)
+                putExtra("customFieldName", customFieldName)
+                putExtra("customFieldValue", customFieldValue)
+                putExtra("idCategory", idCategory)
 
             }
             startActivityForResult(intent, EDIT_ACCOUNT_CODE)
@@ -133,16 +139,20 @@ class ViewAccount : AppCompatActivity() {
                 val return_username = data!!.getStringExtra("username").toString()
                 val return_password = data!!.getStringExtra("password").toString()
                 val return_note = data!!.getStringExtra("note").toString()
-
+                val return_customName = data!!.getStringExtra("customFieldName").toString()
+                val return_customValue = data!!.getStringExtra("customFieldValue").toString()
+                val return_idCategory = data!!.getIntExtra("idCategory", -1)
 
                 val account = Account(
-                    id,
-                    return_name,
-                    return_email,
-                    return_username,
-                    return_password,
-                    return_note,
-                    idCategory
+                    id = id,
+                    name = return_name,
+                    email = return_email,
+                    username = return_username,
+                    password = return_password,
+                    note = return_note,
+                    idCategory = return_idCategory,
+                    customFieldName = return_customName,
+                    customFieldValue = return_customValue
                 )
 
                 var db: DBHandler = DBHandler(this)

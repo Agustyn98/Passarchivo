@@ -4,11 +4,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import com.example.passarchivo.account.AccountListActivity
 import com.example.passarchivo.category.CategoryList
+import com.example.passarchivo.search.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
 
         setCardViewCategoriesListener()
         setCardViewViewAllListener()
+        setCardViewChangePassListener()
+        setCardViewSearchListener()
     }
 
     fun setCardViewCategoriesListener(){
@@ -38,6 +40,28 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.startActivity(this, intent, null)
 
         })
+
+    }
+
+    fun setCardViewChangePassListener(){
+        val cardView : CardView = findViewById(R.id.cardViewChangePassword);
+        cardView.setOnClickListener(View.OnClickListener {
+
+            val intent = Intent(this, ChangePassword::class.java)
+            startActivity(intent)
+
+        })
+    }
+
+    fun setCardViewSearchListener(){
+        val cardView : CardView = findViewById(R.id.cardViewSearch);
+        cardView.setOnClickListener(View.OnClickListener {
+
+            val intent = Intent(this, SeachAccount::class.java)
+            startActivity(intent)
+
+        })
+
 
     }
 }

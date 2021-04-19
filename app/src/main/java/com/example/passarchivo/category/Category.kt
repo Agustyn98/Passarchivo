@@ -21,6 +21,10 @@ class Category(id: Int = -1 , name: String, imageId: Int) {
         return imageId
     }
 
+    override fun toString(): String {
+        return name
+    }
+
 
 
 }

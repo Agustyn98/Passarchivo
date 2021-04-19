@@ -46,16 +46,20 @@ class Account(
         return note
     }
 
-    fun getCustonFieldName() : String{
+    fun getCustomFieldName() : String{
         return customFieldName
     }
 
-    fun getCustonFieldValue() : String{
+    fun getCustomFieldValue() : String{
         return customFieldValue
     }
 
     fun getIdCategory(): Int {
         return idCategory
+    }
+
+    override fun toString(): String {
+        return name
     }
 
 }

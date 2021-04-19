@@ -1,4 +1,4 @@
-package com.example.passarchivo
+package com.example.passarchivo.password
 
 import android.app.Activity
 import android.content.Intent
@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import com.example.passarchivo.DBHandler
+import com.example.passarchivo.R
 
 class CreateMainPassword : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,13 +20,13 @@ class CreateMainPassword : AppCompatActivity() {
 
     private fun buttonCreateMainPassListener() {
 
-        val button : Button = findViewById(R.id.buttonCreateMainPass)
+        val button: Button = findViewById(R.id.buttonCreateMainPass)
         button.setOnClickListener(View.OnClickListener {
             val pass1 = findViewById<EditText>(R.id.editTextCreateMainPass1).text.toString()
             val pass2 = findViewById<EditText>(R.id.editTextCreateMainPass2).text.toString()
 
-            if( !(pass1.isNullOrEmpty() || pass2.isNullOrEmpty()) ){
-                if(pass1.equals(pass2,false)){
+            if (!(pass1.isNullOrEmpty())) {
+                if (pass1.equals(pass2, false)) {
 
                     registerMainPass(pass1)
                     goBackToMain()
@@ -35,13 +37,13 @@ class CreateMainPassword : AppCompatActivity() {
 
     }
 
-    fun registerMainPass(pass: String) : Long{
+    fun registerMainPass(pass: String): Long {
         val db: DBHandler = DBHandler(this)
         val result = db.addMainPass(pass)
         return result
     }
 
-    fun goBackToMain(){
+    fun goBackToMain() {
         val intent = Intent()
         setResult(Activity.RESULT_OK, intent)
         finish()

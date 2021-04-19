@@ -1,16 +1,18 @@
-package com.example.passarchivo.account
+package com.example.passarchivo.search
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.app.ActivityCompat.startActivity
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.passarchivo.R
+import com.example.passarchivo.account.Account
+import com.example.passarchivo.account.ViewAccount
 
-class AdapterAccount(private val dataSet: ArrayList<Account>) :
-    RecyclerView.Adapter<AdapterAccount.ViewHolder>() {
+class AdapterSearch(private val dataSet: ArrayList<Account>) :
+    RecyclerView.Adapter<AdapterSearch.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView
@@ -21,14 +23,13 @@ class AdapterAccount(private val dataSet: ArrayList<Account>) :
         }
     }
 
-    // Create a new view, which defines the UI (.xml) of the list item
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.account_layout, parent, false)
         return ViewHolder(view)
     }
 
-    //This method iterates for each item
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.textView.setText(dataSet[position].getName());
 
@@ -38,7 +39,7 @@ class AdapterAccount(private val dataSet: ArrayList<Account>) :
                 putExtra("id", dataSet[position].getId())
             }
 
-            startActivity(holder.textView.context, intent, null)
+            ActivityCompat.startActivity(holder.textView.context, intent, null)
 
         })
     }
@@ -46,5 +47,6 @@ class AdapterAccount(private val dataSet: ArrayList<Account>) :
     override fun getItemCount(): Int {
         return dataSet.size;
     }
+
 
 }

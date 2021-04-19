@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
-import com.example.passarchivo.category.CategoryList
-import com.example.passarchivo.category.EditCategory
+import com.example.passarchivo.password.CreateMainPassword
 
 class MainPassword : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
