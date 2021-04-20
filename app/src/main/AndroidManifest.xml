@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.passarchivo">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Passarchivo">
+        <activity android:name=".search.SearchAccount"></activity>
+        <activity android:name=".password.ChangePassword" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".password.CreateMainPassword" />
+        <activity android:name=".password.MainPassword">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".account.ViewAccount" />
+        <activity android:name=".account.EditAccount" />
+        <activity android:name=".category.EditCategory" />
+        <activity android:name=".account.AccountListActivity" />
+        <activity android:name=".category.CategoryList" />
+    </application>
+
+</manifest>
