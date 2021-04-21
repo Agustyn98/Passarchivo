@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import com.example.passarchivo.DBHandler
 import com.example.passarchivo.R
 
@@ -33,7 +34,8 @@ class ViewAccount : AppCompatActivity() {
 
         setButtonEditListener()
         setButtonDeleteListener()
-        //todo method that changes visibility of blank fields
+        setButtonCopyListener()
+
     }
 
 
@@ -158,6 +160,29 @@ class ViewAccount : AppCompatActivity() {
                 updateVariables()
             }
         }
+    }
+
+    fun setButtonCopyListener(){
+
+        val button : Button = findViewById(R.id.buttonCopyAccount)
+        button.setOnClickListener(View.OnClickListener {
+
+            val db: DBHandler = DBHandler(this)
+            val account = Account(
+                name = "$name (Copy)",
+                email = email!!,
+                username = username!!,
+                password = password!!,
+                note = note!!,
+                idCategory = idCategory,
+                customFieldName = customFieldName!!,
+                customFieldValue = customFieldValue!!
+            )
+            db.addOneAccount(account)
+            Toast.makeText(this,"Copied '$name'",Toast.LENGTH_LONG).show()
+
+        })
+
     }
 
 }

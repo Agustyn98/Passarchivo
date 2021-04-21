@@ -52,6 +52,10 @@ class EditCategory : AppCompatActivity() {
         buttonSave.setOnClickListener(View.OnClickListener {
             val editTextName = findViewById(R.id.editTextCategoryName) as EditText
             val categoryName = editTextName.text.toString()
+
+            if(checkForEmptyFields(categoryName))
+                return@OnClickListener
+
             val spinner: Spinner = findViewById(R.id.spinnerImageId)
             val categoryImageId = spinner.selectedItemPosition
 
@@ -64,6 +68,14 @@ class EditCategory : AppCompatActivity() {
             finish()
 
         })
+    }
+
+    private fun checkForEmptyFields(field: String): Boolean {
+        if (field.isBlank()) {
+            Toast.makeText(this, "Name cannot be empty", Toast.LENGTH_SHORT).show()
+            return true
+        }
+        return false
     }
 
 }

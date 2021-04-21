@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.passarchivo.account.Account
 import com.example.passarchivo.category.Category
+import com.example.passarchivo.password.PasswordManager
 import java.lang.String
 
 class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", null, 1) {
@@ -68,7 +69,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
         contentValues.put(COLUMN_NAMEACCOUNT, account.getName())
         contentValues.put(COLUMN_EMAIL, account.getEmail())
         contentValues.put(COLUMN_USERNAME, account.getUserName())
-        contentValues.put(COLUMN_PASSWORD, account.getPassword())
+        contentValues.put(COLUMN_PASSWORD, PasswordManager.encrypt(account.getPassword()))
         contentValues.put(COLUMN_NOTE, account.getNote())
         contentValues.put(COLUMN_ID_CATEGORY, account.getIdCategory())
         contentValues.put(COLUMN_CUSTOM_NAME, account.getCustomFieldName())
@@ -82,7 +83,9 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
     fun addMainPass(password: kotlin.String): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(COLUMN_MAIN_PASS, password)
+        val ran = PasswordManager()
+        val hashedPass = ran.hashPassword(password = password)
+        contentValues.put(COLUMN_MAIN_PASS, hashedPass)
         val result = db.insert(tableNameMainPassword, null, contentValues)
         db.close()
         return result
@@ -127,7 +130,8 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
                 val name = cursor.getString(1)
                 val email = cursor.getString(2)
                 val username = cursor.getString(3)
-                val password = cursor.getString(4)
+                var password = cursor.getString(4)
+                password = PasswordManager.decrypt(password)
                 val note = cursor.getString(5)
                 val idCategory = cursor.getInt(6)
                 val customFieldName = cursor.getString(7)
@@ -150,6 +154,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
             } while (cursor.moveToNext())
         }
         db.close()
+        cursor.close()
         return accountArray
     }
 
@@ -170,7 +175,8 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
                 val name = cursor.getString(1)
                 val email = cursor.getString(2)
                 val username = cursor.getString(3)
-                val password = cursor.getString(4)
+                var password = cursor.getString(4)
+                password = PasswordManager.decrypt(password)
                 val note = cursor.getString(5)
                 val idCategory = cursor.getInt(6)
                 val customFieldName = cursor.getString(7)
@@ -209,7 +215,8 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
             val name = cursor.getString(1)
             val email = cursor.getString(2)
             val username = cursor.getString(3)
-            val password = cursor.getString(4)
+            var password = cursor.getString(4)
+            password = PasswordManager.decrypt(password)
             val note = cursor.getString(5)
             val customFieldName = cursor.getString(6)
             val customFieldValue = cursor.getString(7)
@@ -236,13 +243,17 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
 
     fun getMainPass(): kotlin.String {
         val db = this.readableDatabase
-        val queryString = "SELECT * FROM " + tableNameMainPassword
+        val queryString = "SELECT * FROM $tableNameMainPassword"
         val cursor: Cursor = db.rawQuery(queryString, null)
         if (cursor.moveToFirst()) {
-            return cursor.getString(0)
+            val returnPass = cursor.getString(0)
+            cursor.close()
+            db.close()
+            return returnPass
         }
-        return ""
+        cursor.close()
         db.close()
+        return ""
     }
 
     fun deleteOneCategory(id: Int?): Int {
@@ -299,7 +310,7 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
         contentValues.put(COLUMN_NAMEACCOUNT, account.getName())
         contentValues.put(COLUMN_EMAIL, account.getEmail())
         contentValues.put(COLUMN_USERNAME, account.getUserName())
-        contentValues.put(COLUMN_PASSWORD, account.getPassword())
+        contentValues.put(COLUMN_PASSWORD, PasswordManager.encrypt(account.getPassword()))
         contentValues.put(COLUMN_NOTE, account.getNote())
         contentValues.put(COLUMN_CUSTOM_NAME, account.getCustomFieldName())
         contentValues.put(COLUMN_CUSTOM_VALUE, account.getCustomFieldValue())
@@ -312,9 +323,11 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
     }
 
     fun updateMainPass(newPass: kotlin.String): Int {
+        val ran = PasswordManager()
+        val hashedPass = ran.hashPassword(newPass)
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(COLUMN_MAIN_PASS, newPass)
+        contentValues.put(COLUMN_MAIN_PASS, hashedPass)
 
         val success = db.update(tableNameMainPassword, contentValues, null, null)
         db.close()

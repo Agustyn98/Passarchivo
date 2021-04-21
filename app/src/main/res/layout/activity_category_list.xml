@@ -36,7 +36,7 @@
         android:id="@+id/textViewNoItemsCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="44dp"
         android:text="No items here yet"
         android:textColor="#000000"
         android:textSize="24sp"

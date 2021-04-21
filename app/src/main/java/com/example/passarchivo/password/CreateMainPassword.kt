@@ -33,10 +33,10 @@ class CreateMainPassword : AppCompatActivity() {
                     goBackToMain()
 
                 }else{
-                    Toast.makeText(this,"Passwords don't match" , Toast.LENGTH_SHORT)
+                    Toast.makeText(this,"Passwords don't match" , Toast.LENGTH_SHORT).show()
                 }
             }else{
-                Toast.makeText(this,"Password can't be blank",Toast.LENGTH_SHORT)
+                Toast.makeText(this,"Password can't be blank",Toast.LENGTH_SHORT).show()
             }
         })
 

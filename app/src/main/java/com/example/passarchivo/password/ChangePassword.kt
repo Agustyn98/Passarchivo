@@ -32,6 +32,7 @@ class ChangePassword : AppCompatActivity() {
 
             if (confirmation.equals("Password changed", true)) {
                 button.isEnabled = false
+                button.text = "Password changed"
             }
 
         })
@@ -40,24 +41,27 @@ class ChangePassword : AppCompatActivity() {
     private fun confirmNewPass(newCurrentPass: String, newPass1: String, newPass2: String): String {
         val db: DBHandler = DBHandler(this)
         val currentPass = db.getMainPass()
-        println("old pass: $currentPass , written: $newCurrentPass")
-        println("new pass1 and 2:  $newPass1   $newPass2")
 
         if (newPass1.isBlank()) {
             return "Error"
         }
 
-        if (currentPass.isNotBlank()) {
-            if (currentPass.equals(newCurrentPass, false)) {
-                if (newPass1.equals(newPass2, false)) {
+        val editTextPass = hashNewPass(newCurrentPass)
 
-                    db.updateMainPass(newPass1)
-                    return "Password changed"
-                }
-                return "Password don't match"
+        if (currentPass.equals(editTextPass, false)) {
+            if (newPass1.equals(newPass2, false)) {
+
+                db.updateMainPass(newPass1)
+                return "Password changed"
             }
-            return "Wrong password"
+            return "Password don't match"
         }
-        return "Error"
+        return "Wrong password"
+
+    }
+
+    private fun hashNewPass(pass: String): String? {
+        val ran = PasswordManager()
+        return ran.hashPassword(pass)
     }
 }

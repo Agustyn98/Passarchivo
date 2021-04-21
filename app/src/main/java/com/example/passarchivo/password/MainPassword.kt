@@ -25,9 +25,11 @@ class MainPassword : AppCompatActivity() {
         buttonEnter.setOnClickListener(View.OnClickListener {
 
             val enteredPass = findViewById<EditText>(R.id.editTextMainPassword).text.toString()
+            val ran = PasswordManager()
+            val hashedEnteredPass = ran.hashPassword(enteredPass)
             val db: DBHandler = DBHandler(this)
             val realPass = db.getMainPass()
-            if (enteredPass.equals(realPass, false)) {
+            if (hashedEnteredPass.equals(realPass, false)) {
                 //correct password
                 val intent: Intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
@@ -53,7 +55,7 @@ class MainPassword : AppCompatActivity() {
 
     private fun checkMainPass() {
         val mainPass = getMainPass()
-        if (mainPass.isEmpty()) {
+        if (mainPass.isBlank()) {
             val intent: Intent = Intent(this, CreateMainPassword::class.java)
             startActivity(intent)
 
