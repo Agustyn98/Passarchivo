@@ -60,7 +60,10 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) :
             4 -> holder.imageView.setImageResource(R.drawable.ic_money)
             5 -> holder.imageView.setImageResource(R.drawable.ic_web)
             6 -> holder.imageView.setImageResource(R.drawable.ic_baseline_android_24)
-            7 -> holder.imageView.setImageResource(R.mipmap.ic_kyoko)
+            7 -> holder.imageView.setImageResource(R.drawable.ic_baseline_account_box_24)
+            8 -> holder.imageView.setImageResource(R.drawable.ic_iphone)
+            9 -> holder.imageView.setImageResource(R.drawable.ic_baseline_house_24)
+            10 -> holder.imageView.setImageResource(R.mipmap.ic_kyoko)
             else -> {
                 holder.imageView.setImageResource(R.drawable.ic_baseline_android_24)
             }

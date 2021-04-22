@@ -35,7 +35,8 @@ class EditCategory : AppCompatActivity() {
         val spinner: Spinner = findViewById(R.id.spinnerImageId)
         val listImgeIds: ArrayList<String> = ArrayList<String>()
         listImgeIds.add("Laptop"); listImgeIds.add("Shopping Cart"); listImgeIds.add("Credit Card"); listImgeIds.add("Email");
-        listImgeIds.add("Money");listImgeIds.add("Web");listImgeIds.add("Android");listImgeIds.add("Kyoko");
+        listImgeIds.add("Money");listImgeIds.add("Web");listImgeIds.add("Android");listImgeIds.add("Account");listImgeIds.add("Phone");
+        listImgeIds.add("House");listImgeIds.add("Kyoko");
 
         val dataAdapter: ArrayAdapter<String> =
             ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listImgeIds)
