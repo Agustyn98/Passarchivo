@@ -332,7 +332,6 @@ class DBHandler(context: Context?) : SQLiteOpenHelper(context, "passarchivo", nu
         val success = db.update(tableNameMainPassword, contentValues, null, null)
         db.close()
         return success
-
     }
 
     fun searchAccounts(search: kotlin.String): ArrayList<Account> {

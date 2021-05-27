@@ -31,8 +31,8 @@ class CategoryList : AppCompatActivity() {
         val array1 = getAllCategories()
         recyclerViewCategories.adapter = AdapterCategory(array1)
 
+        //Set a textview when there are no items
         val textView : TextView = findViewById(R.id.textViewNoItemsCategory)
-        println("size array: ${array1.size}")
         if(array1.size <= 0)
             textView.visibility = View.VISIBLE
         else

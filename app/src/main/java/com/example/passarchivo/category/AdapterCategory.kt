@@ -119,6 +119,7 @@ class AdapterCategory(private val dataSet: ArrayList<Category>) :
                     builder2.setMessage("All password that belong to this category will be deleted")
                     builder2.setPositiveButton("Yes") { dialog, which ->
                         var mainActivityInstance = context
+
                         mainActivityInstance =
                             mainActivityInstance as (CategoryList) //Explicit Cast
                         var db: DBHandler = DBHandler(context)
